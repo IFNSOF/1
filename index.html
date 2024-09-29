@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кликер</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        button {
+            font-size: 20px;
+            padding: 10px 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Кликер</h1>
+    <p>Количество кликов: <span id="count">0</span></p>
+    <button onclick="incrementCount()">Кликни меня!</button>
+
+    <script>
+        let count = 0;
+
+        function incrementCount() {
+            count++;
+            document.getElementById("count").innerText = count;
+
+            // Отправляем данные на сервер
+            fetch('/update', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ count: count })
+            });
+        }
+
+        // Получаем текущее значение счетчика при загрузке страницы
+        window.onload = function() {
+            fetch('/get_count')
+            .then(response => response.json())
+            .then(data => {
+                count = data.count;
+                document.getElementById("count").innerText = count;
+            });
+        }
+    </script>
+</body>
+</html>
